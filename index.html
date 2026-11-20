@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#090b14">
+  <title>Un mensaje para ti</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh; padding: 24px 16px;
+      display: grid; place-items: center;
+      color: #f5f6ff; font-family: Arial, Helvetica, sans-serif;
+      background: radial-gradient(circle at top, #202744 0, #0c1020 48%, #05060b 100%);
+    }
+    main { width: min(100%, 760px); text-align: center; }
+    h1 { font-size: clamp(1.5rem, 5vw, 2.2rem); margin: 0 0 10px; }
+    #counter { color: #aeb9df; margin: 0 0 18px; }
+    .video-wrap {
+      padding: 10px; border: 1px solid #46527c; border-radius: 18px;
+      background: #111629; box-shadow: 0 18px 55px #0009;
+    }
+    video { display: block; width: 100%; max-height: 72vh; border-radius: 11px; background: #000; }
+    #message {
+      display: none; margin-top: 24px; padding: 24px 20px;
+      border: 1px solid #7184c7; border-radius: 18px;
+      background: linear-gradient(145deg, #1a2340, #101525);
+      box-shadow: 0 15px 45px #0008;
+      font-size: clamp(1.1rem, 3.8vw, 1.45rem); line-height: 1.65;
+      white-space: pre-wrap;
+    }
+    #status { color: #aeb9df; margin-top: 14px; font-size: .9rem; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Un mensaje para ti</h1>
+    <p id="counter">Video 1 de 3</p>
+    <div class="video-wrap" id="playerArea">
+      <video id="player" controls playsinline preload="auto">
+        <source src="video1.mp4" type="video/mp4">
+        Tu navegador no puede reproducir este video.
+      </video>
+    </div>
+    <p id="status">Los videos se mostrarán uno por uno.</p>
+    <section id="message">Es tonto decirlo ahora verdad tal vez si..o quien sabe solo no quiero q pienses q no te amo o sea si te amo solo que no estoy animado ahora suena tonto la verdad pero va..lo siento si</section>
+  </main>
+  <script>
+    const videos = ["video1.mp4", "video2.mp4", "video3.mp4"];
+    const player = document.getElementById("player");
+    const counter = document.getElementById("counter");
+    const status = document.getElementById("status");
+    const message = document.getElementById("message");
+    let current = 0;
+
+    player.addEventListener("ended", () => {
+      current++;
+      if (current < videos.length) {
+        counter.textContent = `Video ${current + 1} de ${videos.length}`;
+        player.src = videos[current];
+        player.load();
+        status.textContent = "Siguiente video…";
+        const playPromise = player.play();
+        if (playPromise) {
+          playPromise.catch(() => {
+            status.textContent = "Toca reproducir para continuar con el siguiente video.";
+          });
+        }
+      } else {
+        document.getElementById("playerArea").style.display = "none";
+        counter.style.display = "none";
+        status.style.display = "none";
+        message.style.display = "block";
+      }
+    });
+  </script>
+</body>
+</html>
